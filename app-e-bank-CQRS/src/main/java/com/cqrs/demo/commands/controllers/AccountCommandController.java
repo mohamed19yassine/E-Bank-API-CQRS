@@ -6,11 +6,13 @@ import com.cqrs.demo.commonapi.commands.DebitAccountCommand;
 import com.cqrs.demo.commonapi.dtos.CreateAccountRequestDTO;
 import com.cqrs.demo.commonapi.dtos.CreditAccountRequestDTO;
 import com.cqrs.demo.commonapi.dtos.DebitAccountRequestDTO;
+
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.eventsourcing.eventstore.EventStore;
 import org.springframework.http.HttpStatus;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -20,10 +22,14 @@ import java.util.stream.Stream;
 @RestController
 @RequestMapping(path="/commands/account")
 public class AccountCommandController {
+
+    private KafkaTemplate<String,Object> kafkaTemplate;
+
     private CommandGateway commandGateway;
     private EventStore eventStore;
 
-    public AccountCommandController(CommandGateway commandGateway, EventStore eventStore) {
+    public AccountCommandController(KafkaTemplate<String, Object> kafkaTemplate, CommandGateway commandGateway, EventStore eventStore) {
+        this.kafkaTemplate = kafkaTemplate;
         this.commandGateway = commandGateway;
         this.eventStore = eventStore;
     }
@@ -60,6 +66,7 @@ public class AccountCommandController {
     public Stream eventStore(@PathVariable String id){
          return eventStore.readEvents(id).asStream();
     }
+
 
 
 }

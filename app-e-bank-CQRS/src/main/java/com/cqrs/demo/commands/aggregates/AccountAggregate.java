@@ -3,6 +3,7 @@ package com.cqrs.demo.commands.aggregates;
 import com.cqrs.demo.commonapi.commands.CreateAccountCommand;
 import com.cqrs.demo.commonapi.commands.CreditAccountCommand;
 import com.cqrs.demo.commonapi.commands.DebitAccountCommand;
+import com.cqrs.demo.commonapi.dtos.CreditAccountRequestDTO;
 import com.cqrs.demo.commonapi.enums.AccountStatus;
 import com.cqrs.demo.commonapi.events.AccountCreatedEvent;
 import com.cqrs.demo.commonapi.events.AccountCreditedEvent;
@@ -13,6 +14,7 @@ import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.modelling.command.AggregateIdentifier;
 import org.axonframework.modelling.command.AggregateLifecycle;
 import org.axonframework.spring.stereotype.Aggregate;
+import org.springframework.kafka.annotation.KafkaListener;
 
 @Aggregate
 public class AccountAggregate {
@@ -79,4 +81,9 @@ public class AccountAggregate {
         this.balance-=event.getAmount();
 
     }
+
+//    @KafkaListener(topics = "CodeDecodeTopic", groupId = "codedecode-group")
+//    public void listenToCodeDecodeKafkaTopic(String messageReceived) {
+//        System.out.println("Message received is " + messageReceived);
+//    }
 }
